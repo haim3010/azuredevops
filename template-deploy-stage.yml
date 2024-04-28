@@ -1,0 +1,40 @@
+parameters:
+- name: stageName
+  default: ''
+- name: jobName
+  default: ''
+- name: environment
+  default: ''
+- name: variableGroup
+  default: ''
+- name: dependsOnStage
+  default: ''
+- name: appName
+  default: 'dotnet-webapp-dev'
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    dependsOn: ${{ parameters.dependsOnStage }}
+    condition: succeeded()
+    jobs:
+      - deployment: Deploy
+        displayName: ${{ parameters.jobName }}
+        pool:
+          vmImage: 'windows-latest'
+        variables:
+        - group: ${{ parameters.variableGroup }}
+        environment: ${{ parameters.environment }}       
+        strategy:
+          runOnce:
+           deploy:
+             steps:
+               - download: current
+                 artifact: webapp_build
+               - task: AzureWebApp@1
+                 inputs:
+                  azureSubscription: 'AzureServiceConnection'
+                  appType: 'webApp'
+                  appName: ${{ parameters.appName }}       
+                  package: '$(Pipeline.Workspace)/**/*.zip'
+                  appSettings: '-ConnectionStrings:DefaultConnection "$(ConnectionString)"'
+                  deploymentMethod: 'auto' 

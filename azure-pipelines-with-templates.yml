@@ -1,0 +1,36 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+  - template: template-build-stage.yml
+  - template: template-deploy-stage.yml
+    parameters:
+      stageName: DeployToDev
+      jobName: 'Deploy To Dev'
+      environment: dev
+      variableGroup: webapp-dev
+      dependsOnStage: Build
+      appName: 'dotnet-webapp-dev'
+  - template: template-deploy-stage.yml
+    parameters:
+      stageName: DeployToQAE
+      jobName: 'Deploy To QAE'
+      environment: qae
+      variableGroup: webapp-qa
+      dependsOnStage: DeployToDev
+      appName: 'dotnet-webapp-qae'
+
+
+
+
+

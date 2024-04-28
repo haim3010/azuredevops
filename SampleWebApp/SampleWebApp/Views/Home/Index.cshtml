@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<Item> 
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <br />
+    <table style="width:100%;padding:5px;">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price.ToString("C")</td>
+            </tr>
+        }
+    </table>
+    <br />
+    <p>ConnectionString from settings: <span style="font-weight:bold;font-style:italic">@ViewBag.ConnectionString</span> </p>
+
+    
+</div>
