@@ -1,0 +1,9 @@
+stages:
+  - stage: Build
+    displayName: Build Application
+    jobs:
+    - job: Build
+      pool:
+        vmImage: 'windows-latest'        
+      steps:           
+      - template: templates-steps.yml
